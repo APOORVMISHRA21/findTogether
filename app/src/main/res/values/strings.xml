@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">findlost</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Apoorv Mishra</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_lost"><b>Lost</b></string>
+    <string name="menu_found"><b>Found</b></string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="go_sign_in"><u>"Already have an account? Sign In</u></string>
+    <string name="go_sign_up"><u>"New User? Sign Up</u></string>
+</resources>
