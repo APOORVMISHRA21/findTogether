@@ -7,6 +7,11 @@ const { User, validateUser } = require('../Models/User.js');
 
 router.use(express.json());
 
+router.get('/', async (req, res) => {
+    const user = await User.find();
+    res.send(user);
+});
+
 router.post('/', async (req, res) => {
 
     const { error } = validateUser(req.body);
