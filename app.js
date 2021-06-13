@@ -9,7 +9,7 @@ mongoose.connect('mongodb+srv://apoorv:apoorv21@findlost.7s1yz.mongodb.net/test?
 let app = express();
 
 app.use(express.json());
-app.use('/', (req, res) => {res.send('ONLINE !!!!')});
+app.use('/me', (req, res) => {res.send('ONLINE !!!!')});
 app.use('/register', registerRouter);
 
 const PORT = process.env.PORT || 3000;
