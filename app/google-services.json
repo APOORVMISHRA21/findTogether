@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "237779612806",
+    "project_id": "findlost-5c017",
+    "storage_bucket": "findlost-5c017.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237779612806:android:ad2abb31e6de04e1948d07",
+        "android_client_info": {
+          "package_name": "com.example.findlost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237779612806-198dcvrq288obio40bhtdrd9kbfd2g83.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.findlost",
+            "certificate_hash": "d26b41662b4eb11d59ca375e41e797de38894acf"
+          }
+        },
+        {
+          "client_id": "237779612806-nk1ebt0m20uo8gunqcl4r0udn0n583k0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-hSoA30W-X0_63SFUfv3I-y3WqXx4ZAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237779612806-nk1ebt0m20uo8gunqcl4r0udn0n583k0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
