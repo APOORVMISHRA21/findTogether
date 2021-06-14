@@ -17,10 +17,10 @@ mongoose.connect(DB_URL,{useNewUrlParser: true, useUnifiedTopology: true})
 //     .catch((err) => console.log(err));
 
 
-if(!config.get('privateJwtKey')){
-    console.error('FATAL ERROR, ENV VAR NOT DEFINED');
-    process.exit(1);
-}
+// if(!config.get('privateJwtKey')){
+//     console.error('FATAL ERROR, ENV VAR NOT DEFINED');
+//     process.exit(1);
+// }
 let app = express();
 
 app.use(express.json());
