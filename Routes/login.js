@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const brcypt = require('bcrypt');
 
 const router = express.Router();
-const { User, validateUser } = require('../Models/User.js');
+const { User, validateUser } = require('../Models/user.js');
 
 router.use(express.json());
 
