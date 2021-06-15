@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const config = require('config');
 const express = require('express');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
@@ -31,7 +30,7 @@ router.post('/', async (req, res) => {
 
     //res.send(true);
     
-    const token = jwt.sign({_id: user._id}, config.get('privateJwtKey'));
+    const token = jwt.sign({_id: user._id}, 'privateKey');
 
     return res.send(token);
 });
