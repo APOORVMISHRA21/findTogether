@@ -23,6 +23,10 @@ router.post('/', async (req, res) => {
     const salt = await brcypt.genSalt(10);
     const pass = await brcypt.hash(req.body.password, salt);
 
+    const userCheck = User.find({email: req.body.email});
+
+    if(userCheck) return res.status(400).send("User already exists.");
+
     User.count({}, async (err, count) => {
         const user = User({
             userId : count + 1,
@@ -32,7 +36,7 @@ router.post('/', async (req, res) => {
 
         await user.save();
 
-        res.send(user);
+        return res.send(user);
     });
 });
 
