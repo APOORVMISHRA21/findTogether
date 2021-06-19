@@ -23,9 +23,9 @@ router.post('/', async (req, res) => {
     const salt = await brcypt.genSalt(10);
     const pass = await brcypt.hash(req.body.password, salt);
 
-    // const userCheck = User.findOne({email: req.body.email}).exec();
+    const userCheck = User.findOne({email: req.body.email}).exec();
 
-    // if(userCheck) return res.status(400).send("User already exists.");
+    if(userCheck) return res.status(400).send("User already exists.");
 
     User.count({}, async (err, count) => {
         const user = User({
