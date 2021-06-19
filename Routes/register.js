@@ -33,6 +33,8 @@ router.post('/', async (req, res) => {
     User.count({}, async (err, count) => {
         const user = User({
             userId : count + 1,
+            firstName : req.body.firstName,
+            lastName : req.body.lastName,
             email : req.body.email,
             password : pass
         });
