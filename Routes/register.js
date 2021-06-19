@@ -25,7 +25,9 @@ router.post('/', async (req, res) => {
 
     const userCheck = await User.find({email: req.body.email});
 
-    if(userCheck) return res.status(400).send("User already exists.");
+    if(userCheck){
+        return res.status(400).send("User already exists.");
+    }
 
     User.count({}, async (err, count) => {
         const user = User({
