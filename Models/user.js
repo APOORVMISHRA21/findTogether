@@ -22,13 +22,11 @@ const userSchema = new mongoose.Schema({
     firstName: {
         type : String,
         required : true,
-        maxlength : 12
     },
 
     lastName: {
         type : String,
         required : true,
-        maxlength : 12
     },
 
     email : {

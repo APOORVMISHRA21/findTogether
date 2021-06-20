@@ -30,9 +30,15 @@ router.post('/', async (req, res) => {
 
     //res.send(true);
     
-    const token = jwt.sign({_id: user._id}, 'privateKey');
+    // const token = jwt.sign({_id: user._id}, 'privateKey');
 
-    return res.send(token);
+    // return res.send(token);
+
+    return res.send({
+        "firstName" : user.firstName,
+        "lastName" : user.lastName,
+        "email" : user.email
+    });
 });
 
 const schema = Joi.object({
