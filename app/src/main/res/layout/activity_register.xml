@@ -7,14 +7,68 @@
     android:orientation="vertical"
     tools:context=".RegisterActivity">
 
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_lost"/>
+<!--    <ImageView-->
+<!--        android:id="@+id/logo"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:src="@drawable/ic_lost"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="60dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/firstName_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:layout_weight="1"
+            android:hint="First Name"
+            app:boxBackgroundColor="@color/white"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomStart="4dp"
+            app:boxCornerRadiusBottomEnd="4dp"
+            app:hintAnimationEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/firstName"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/lastName_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_weight="1"
+            android:hint="Last Name"
+            app:boxBackgroundColor="@color/white"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomStart="4dp"
+            app:boxCornerRadiusBottomEnd="4dp"
+            app:hintAnimationEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/lastName"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -99,7 +153,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:backgroundTint="#7FE1F1"
         android:text="Sign Up"
         android:textColor="@color/black"

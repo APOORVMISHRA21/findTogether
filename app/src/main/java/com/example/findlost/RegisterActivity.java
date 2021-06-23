@@ -41,6 +41,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -48,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseDatabase mDatabase;
 
-    static String registerUrl = "http://find-lost.herokuapp.com/register";
+    static String registerUrl = "http://find-lost.herokuapp.com/user";
 
     private TextWatcher emailWatcher = new TextWatcher() {
         @Override
@@ -89,11 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance();
-
         binding.registerEmail.addTextChangedListener(emailWatcher);
-
         binding.registerConfirmPassword.addTextChangedListener(passwordWatcher);
 
         binding.register.setOnClickListener(new View.OnClickListener() {
@@ -102,12 +99,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if(isValidEmail(binding.registerEmail.getText().toString())) {
                     if(binding.registerConfirmPassword.getText().toString().equals(binding.registerPassword.getText().toString())) {
-
                         if(binding.registerPassword.getText().toString().length()<5){
                             Toast.makeText(RegisterActivity.this, "Password min length should be 5", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            User user = new User(binding.registerEmail.getText().toString(), binding.registerPassword.getText().toString());
+                            User user = new User(binding.firstName.getText().toString(), binding.lastName.getText().toString(), binding.registerEmail.getText().toString(), binding.registerPassword.getText().toString());
                             registerUser(user);
                         }
                     }
@@ -125,6 +121,8 @@ public class RegisterActivity extends AppCompatActivity {
     public void registerUser(User user) {
         JSONObject registrationForm = new JSONObject();
         try{
+            registrationForm.put("firstName", user.getFirstName());
+            registrationForm.put("lastName", user.getLastName());
             registrationForm.put("email", user.getEmail());
             registrationForm.put("password", user.getPassword());
         } catch (JSONException e) {
@@ -133,24 +131,32 @@ public class RegisterActivity extends AppCompatActivity {
 
         RequestBody requestBody = RequestBody.create(registrationForm.toString(), MediaType.parse("application/json; charset=utf-8"));
 
-        postRequest(registerUrl, requestBody);
+        postRequest(registerUrl, requestBody, user);
     }
 
-    public void postRequest(String postUrl, RequestBody body){
+    public void postRequest(String postUrl, RequestBody body, User user){
+
         OkHttpClient client = new OkHttpClient();
-
         final Request request = new Request.Builder().url(postUrl).post(body).build();
-
         client.newCall(request).enqueue(new Callback() {
-
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try{
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(RegisterActivity.this, "REGISTRATION SUCCESSFUL", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> {
+                        if(!response.isSuccessful()){
+                            try (ResponseBody responseBody = response.body()){
+                                Toast.makeText(RegisterActivity.this, responseBody.string(), Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else{
+                            Toast.makeText(RegisterActivity.this, "Registration Successful " , Toast.LENGTH_SHORT).show();
+
                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                            intent.putExtra("name", user.getFirstName()+ " "+ user.getLastName());
+                            intent.putExtra("email", user.getEmail());
+
                             startActivity(intent);
                             finish();
                         }
@@ -175,8 +181,7 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
     }
-    public static boolean isValidEmail(String email)
-    {
+    public static boolean isValidEmail(String email) {
         String expression = "^[\\w\\.]+@([\\w]+\\.)+[A-Z]{2,7}$";
         CharSequence inputString = email;
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
