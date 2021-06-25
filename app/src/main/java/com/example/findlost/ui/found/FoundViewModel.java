@@ -4,16 +4,29 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
+
+import Models.Post;
+
 public class FoundViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
+    private MutableLiveData<ArrayList<Post>> mPostList;
 
     public FoundViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is gallery fragment");
+        mPostList = new MutableLiveData<>();
+        ArrayList<Post> list = new ArrayList<>();
+
+        list.add(new Post("abanijnfi", "Apoorv Mishra", "20 Jan", "Books"));
+        list.add(new Post("abanijnfi", "Apoorv Mishra", "20 Jan", "Books"));
+        list.add(new Post("abanijnfi", "Apoorv Mishra", "20 Jan", "Books"));
+        list.add(new Post("abanijnfi", "Apoorv Mishra", "20 Jan", "Books"));
+        list.add(new Post("abanijnfi", "Apoorv Mishra", "20 Jan", "Books"));
+
+        mPostList.postValue(list);
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<ArrayList<Post>> getData() {
+        return mPostList;
     }
 }
