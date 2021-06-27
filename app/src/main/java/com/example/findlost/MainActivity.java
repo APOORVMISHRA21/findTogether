@@ -1,5 +1,6 @@
 package com.example.findlost;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -40,8 +41,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+
+                Intent intent = new Intent(MainActivity.this, CreatePostActivity.class);
+                intent.putExtra("UserName", getIntent().getStringExtra("name"));
+
+                //send put extra        ===>           "profilepicurl"
             }
         });
 
@@ -57,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
         headerUsername.setText(getIntent().getStringExtra("name"));
         headerUsermail.setText(getIntent().getStringExtra("email"));
+        /*
+                header image ====> getIntent().getString()  ===> "profilepicurl"
+         */
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

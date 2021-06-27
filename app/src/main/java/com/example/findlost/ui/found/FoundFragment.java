@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.findlost.CreatePostActivity;
 import com.example.findlost.R;
 import com.example.findlost.ui.lost.LostViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,14 +41,6 @@ public class FoundFragment extends Fragment {
         recyclerView = (RecyclerView) root.findViewById(R.id.postRecyclerView);
         foundViewModel.getData().observe(getViewLifecycleOwner(), userListUpdateObserver);
 
-        fab = (FloatingActionButton) root.findViewById(R.id.addPost);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // intent to create post
-                // put extra as username, profile pic 
-            }
-        });
         return root;
     }
 

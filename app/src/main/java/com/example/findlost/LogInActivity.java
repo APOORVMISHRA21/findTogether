@@ -121,6 +121,11 @@ public class LogInActivity extends AppCompatActivity {
                                         Intent intent = new Intent(LogInActivity.this, MainActivity.class);
                                         intent.putExtra("name", userJson.getString("firstName") + " " + userJson.getString("lastName"));
                                         intent.putExtra("email", userJson.getString("email"));
+
+                                        /*
+                                            INTENT PUT EXTRA ===>    PROFILE PIC URL
+                                        */
+
                                         startActivity(intent);
                                         finish();
                                     } catch (JSONException e) {

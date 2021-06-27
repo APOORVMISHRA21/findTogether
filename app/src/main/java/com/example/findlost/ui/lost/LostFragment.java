@@ -32,14 +32,6 @@ public class LostFragment extends Fragment {
         lostViewModel = new ViewModelProvider(this).get(LostViewModel.class);
         View root = inflater.inflate(R.layout.fragment_lost, container, false);
 
-//        final TextView textView = root.findViewById(R.id.text_home);
-//        lostViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
-
         recyclerView = (RecyclerView) root.findViewById(R.id.postRecyclerView);
 
         lostViewModel.getData().observe(getViewLifecycleOwner(), userListUpdateObserver);
