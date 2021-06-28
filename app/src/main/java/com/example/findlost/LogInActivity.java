@@ -41,8 +41,6 @@ public class LogInActivity extends AppCompatActivity {
         binding = ActivityLogInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
-
         binding.logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,23 +48,13 @@ public class LogInActivity extends AppCompatActivity {
                 email = binding.loginEmail.getText().toString();
                 password = binding.loginPassword.getText().toString();
 
-//                Log.i("TAG1----", email);
-//                Log.i("TAG2----", password);
-
                 loginUser(email, password);
-
-//                if(!email.isEmpty() && !password.isEmpty()){
-//
-//                }
-//                else{
-//                    Toast.makeText(LogInActivity.this, "Invalid Email or Password.", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
 
-
-
     }
+
+
     public void loginUser(String email, String password){
         JSONObject loginForm = new JSONObject();
         try{
@@ -99,7 +87,6 @@ public class LogInActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
                             if(!response.isSuccessful()){
                                 try (ResponseBody responseBody = response.body()){
                                     Toast.makeText(LogInActivity.this, responseBody.string(), Toast.LENGTH_SHORT).show();
@@ -108,16 +95,14 @@ public class LogInActivity extends AppCompatActivity {
                                 }
                             }
                             else{
-
                                 Toast.makeText(LogInActivity.this, "LOGIN SUCCESSFUL", Toast.LENGTH_SHORT).show();
                                 JSONObject userJson = null;
 
                                 try (ResponseBody responseBody = response.body()) {
-
                                     //Log.i("-#### LOGIN Response: ", responseBody.string());
-
                                     try {
                                         userJson = new JSONObject(responseBody.string());
+
                                         Intent intent = new Intent(LogInActivity.this, MainActivity.class);
                                         intent.putExtra("name", userJson.getString("firstName") + " " + userJson.getString("lastName"));
                                         intent.putExtra("email", userJson.getString("email"));
@@ -133,18 +118,13 @@ public class LogInActivity extends AppCompatActivity {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-
                                 }
-
-
                             }
-
                         }
                     });
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-
             }
         });
     }

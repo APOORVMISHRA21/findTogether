@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, CreatePostActivity.class);
                 intent.putExtra("UserName", getIntent().getStringExtra("name"));
+                startActivity(intent);
 
                 //send put extra        ===>           "profilepicurl"
             }

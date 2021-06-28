@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -92,7 +93,7 @@ public class AddMediaActivity extends AppCompatActivity {
 
         ImageCapture imageCapture = builder.build();
 
-        Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview);
+        Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
 
 
         // if lens facing changes then restart the camera with new lens.
@@ -119,7 +120,8 @@ public class AddMediaActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //click photos
                 SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
-                String fileName = mDateFormat.format(new Date()) + getIntent().getStringExtra("status") + getIntent().getStringExtra("username") + ".jpg";
+                //String fileName = mDateFormat.format(new Date())+"APOORV"+".jpg";
+                String fileName = mDateFormat.format(new Date()) + getIntent().getStringExtra("status") + getIntent().getStringExtra("username").trim() + ".jpg";
                 File file = new File(getBatchDirectoryName(), fileName);
 
                 ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(file).build();
@@ -128,14 +130,14 @@ public class AddMediaActivity extends AppCompatActivity {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         Intent intent = new Intent();
-                        intent.putExtra("image_path", getBatchDirectoryName()+ fileName);
+                        intent.putExtra("image_path", getBatchDirectoryName()+ "/"+fileName);
                         setResult(RESULT_OK, intent);
                         finish();
                     }
 
                     @Override
-                    public void onError(@NonNull ImageCaptureException exception) {
-
+                    public void onError(@NonNull ImageCaptureException error) {
+                        error.printStackTrace();
                     }
                 });
 
@@ -146,9 +148,13 @@ public class AddMediaActivity extends AppCompatActivity {
 
     public String getBatchDirectoryName(){
         String app_folder_path = "";
-        app_folder_path = Environment.getExternalStorageDirectory().toString() + "/FindLost/posts";
+        Log.i("STORAGE-DIR-----", Environment.getExternalStorageDirectory().toString());
+        app_folder_path = Environment.getExternalStorageDirectory().toString() + "/FindLost/Posts";
         File dir = new File(app_folder_path);
-
+        if(!dir.exists())
+        {
+            dir.mkdirs();
+        }
         return app_folder_path;
     }
 
