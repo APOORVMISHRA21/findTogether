@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -98,26 +99,34 @@ public class LogInActivity extends AppCompatActivity {
                                 Toast.makeText(LogInActivity.this, "LOGIN SUCCESSFUL", Toast.LENGTH_SHORT).show();
                                 JSONObject userJson = null;
 
+//                                try (ResponseBody responseBody = response.body()) {
+//                                    //Log.i("-#### LOGIN Response: ", responseBody.string());
+//                                    try {
+//                                        userJson = new JSONObject(responseBody.string());
+//                                        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+//                                        intent.putExtra("name", userJson.getString("firstName") + " " + userJson.getString("lastName"));
+//                                        intent.putExtra("email", userJson.getString("email"));
+//
+//                                        /*
+//                                            INTENT PUT EXTRA ===>    PROFILE PIC URL
+//                                        */
+//
+//                                        startActivity(intent);
+//                                        finish();
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+
                                 try (ResponseBody responseBody = response.body()) {
-                                    //Log.i("-#### LOGIN Response: ", responseBody.string());
-                                    try {
-                                        userJson = new JSONObject(responseBody.string());
-
                                         Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-                                        intent.putExtra("name", userJson.getString("firstName") + " " + userJson.getString("lastName"));
-                                        intent.putExtra("email", userJson.getString("email"));
-
-                                        /*
-                                            INTENT PUT EXTRA ===>    PROFILE PIC URL
-                                        */
-
+                                        intent.putExtra("userdata", responseBody.string());
                                         startActivity(intent);
                                         finish();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
                             }
                         }

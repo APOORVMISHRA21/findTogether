@@ -121,7 +121,7 @@ public class AddMediaActivity extends AppCompatActivity {
                 //click photos
                 SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
                 //String fileName = mDateFormat.format(new Date())+"APOORV"+".jpg";
-                String fileName = mDateFormat.format(new Date()) + getIntent().getStringExtra("status") + getIntent().getStringExtra("username").trim() + ".jpg";
+                String fileName = mDateFormat.format(new Date()) + getIntent().getStringExtra("status") + getIntent().getStringExtra("username") + ".jpg";
                 File file = new File(getBatchDirectoryName(), fileName);
 
                 ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(file).build();

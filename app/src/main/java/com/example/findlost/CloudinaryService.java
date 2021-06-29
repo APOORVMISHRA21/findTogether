@@ -25,7 +25,7 @@ public class CloudinaryService {
         this.context = context;
     }
 
-    public Map UploadTask(File file){
+    public Map UploadTask(File file) throws InterruptedException {
 
         MediaManager.init(context, config);
         Thread thread = new Thread(new Runnable() {
@@ -68,6 +68,7 @@ public class CloudinaryService {
         });
 
         thread.start();
+        thread.join();
         return result;
     }
 

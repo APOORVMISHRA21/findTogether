@@ -20,12 +20,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import okhttp3.internal.http2.Header;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    private JSONObject userJson = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,23 +41,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.addPost);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
                 Intent intent = new Intent(MainActivity.this, CreatePostActivity.class);
-                intent.putExtra("UserName", getIntent().getStringExtra("name"));
+                intent.putExtra("userdata", getIntent().getStringExtra("userdata"));
                 startActivity(intent);
-
-                //send put extra        ===>           "profilepicurl"
             }
         });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-
 
         View HeaderView = navigationView.getHeaderView(0);
 
@@ -61,14 +60,25 @@ public class MainActivity extends AppCompatActivity {
         TextView headerUsername = (TextView) HeaderView.findViewById(R.id.header_username);
         TextView headerUsermail = (TextView) HeaderView.findViewById(R.id.header_email);
 
-        headerUsername.setText(getIntent().getStringExtra("name"));
-        headerUsermail.setText(getIntent().getStringExtra("email"));
+
+        try {
+            userJson = new JSONObject(getIntent().getStringExtra("userdata"));
+            headerUsername.setText(userJson.getString("firstName")+userJson.getString("lastName"));
+            headerUsermail.setText(userJson.getString("email"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //headerUsername.setText(getIntent().getStringExtra("name"));
+        //headerUsermail.setText(getIntent().getStringExtra("email"));
+
         /*
                 header image ====> getIntent().getString()  ===> "profilepicurl"
          */
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_lost, R.id.nav_found, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)

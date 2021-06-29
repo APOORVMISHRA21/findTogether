@@ -10,6 +10,14 @@ public class Post {
 
     public Post(){}
 
+    public Post(String creatorName, String creationDate, String category, String mediaUrl, String description){
+        this.creatorName = creatorName;
+        this.creationDate = creationDate;
+        this.category = category;
+        this.mediaUrl = mediaUrl;
+        this.description = description;
+    }
+
     public Post(String creatorId, String creatorName, String creationDate, String category) {
         this.creatorId = creatorId;
         this.creatorName = creatorName;
@@ -27,13 +35,6 @@ public class Post {
         this.description = description;
     }
 
-    public Post(String creatorId, String creatorName, String creationDate, String category, String media) {
-        this.creatorId = creatorId;
-        this.creatorName = creatorName;
-        this.creationDate = creationDate;
-        this.category = category;
-        this.mediaUrl = media;
-    }
 
 
     public String getCreatorId() {
@@ -68,11 +69,11 @@ public class Post {
         this.category = category;
     }
 
-    public String getMedia() {
+    public String getMediaUrl() {
         return mediaUrl;
     }
 
-    public void setMedia(String media) {
+    public void setMediaUrl(String media) {
         this.mediaUrl = media;
     }
 

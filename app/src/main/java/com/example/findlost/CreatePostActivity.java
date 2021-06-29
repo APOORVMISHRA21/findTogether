@@ -25,26 +25,47 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.findlost.databinding.ActivityCreatePostBinding;
 import com.example.findlost.databinding.ActivityMainBinding;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+
+import Models.Post;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class CreatePostActivity extends AppCompatActivity {
 
     androidx.appcompat.widget.Toolbar toolbar;
     ActivityCreatePostBinding binding;
+    private JSONObject userJson = null;
+    private Map resultData = new HashMap();
+    private ConfigCloudinary Config;
     TextView send_post_btn;
-    int status = 0; //1-lost 2-found
+    int status = 0;                         //1-lost 2-found
+    static String postUrl = "http://find-lost.herokuapp.com/post";
 
-    private ActivityResultLauncher<Intent> launchAddMedia = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+
+    private ActivityResultLauncher<Intent> LaunchAddMedia = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        // Here, no request code
                             uploadImage(result.getData());
-                        //doSomeOperations();
                     }
                 }
             });
@@ -129,16 +150,18 @@ public class CreatePostActivity extends AppCompatActivity {
                     strStatus = "LOST";
                 else
                     strStatus = "FOUND";
-                intent.putExtra("status", strStatus);
-                intent.putExtra("username",getIntent().getStringExtra("UserName"));
 
-                launchAddMedia.launch(intent);
-
-                //bring back the image file here.
+                try {
+                    JSONObject user =  new JSONObject(getIntent().getStringExtra("userdata"));
+                    intent.putExtra("status", strStatus);
+                    intent.putExtra("username",
+                            user.getString("firstName")+user.getString("lastName"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                LaunchAddMedia.launch(intent);
             }
         });
-
-
     }
 
     public void checkCondition(){
@@ -164,62 +187,118 @@ public class CreatePostActivity extends AppCompatActivity {
         File file = new File(intent.getStringExtra("image_path"));
 
         Log.i("----CLOUDINARY----", intent.getStringExtra("image_path"));
-        //upload to cloudinary.
-        Map config = new HashMap();
-        config.put("cloud_name", "dntacvap3");
-        config.put("api_key","127881442217581");
-        config.put("api_secret", "7j562Dpj5TGdEtQfJHeXJNmMxrA");
 
-
-        Cloudinary cloudinary = new Cloudinary(config);
-        MediaManager.init(this, config);
+        Config = new ConfigCloudinary();
+        MediaManager.init(this, Config.getMap());
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                    String requestId = MediaManager.get().upload(file.getAbsolutePath()).option("folder","FindLost/Posts/").option("public_id",file.getName()).callback(new UploadCallback() {
-                        @Override
-                        public void onStart(String requestId) {
-                            Toast.makeText(CreatePostActivity.this, "UPLOAD INITIATED", Toast.LENGTH_SHORT).show();
-                        }
 
-                        @Override
-                        public void onProgress(String requestId, long bytes, long totalBytes) {
+                String requestId = MediaManager.get()
+                        .upload(file.getAbsolutePath())
+                        .option("folder","FindLost/Posts/")
+                        .option("public_id",file.getName())
+                        .callback(new UploadCallback() {
+                            @Override
+                            public void onStart(String requestId) {
+                                Toast.makeText(CreatePostActivity.this, "UPLOAD INITIATED", Toast.LENGTH_SHORT).show();
+                            }
+                            @Override
+                            public void onProgress(String requestId, long bytes, long totalBytes) {
 
-                        }
+                            }
+                            @Override
+                            public void onSuccess(String requestId, Map resultData) {
+                                Toast.makeText(CreatePostActivity.this, "UPLOAD successful", Toast.LENGTH_SHORT).show();
+                                //Log.i("REQUEST UPLOAD----", requestId);
+                                Log.i("REQUEST UPLOAD----", resultData.get("secure_url").toString());
 
-                        @Override
-                        public void onSuccess(String requestId, Map resultData) {
-                            Toast.makeText(CreatePostActivity.this, "UPLOAD successful", Toast.LENGTH_SHORT).show();
-                            //Log.i("REQUEST UPLOAD----", requestId);
-                            Log.i("REQUEST UPLOAD----", resultData.toString());
+                                SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
 
-                            /*
-                            SEND THE SECURE URL TO DATABASE...USE THIS URL TO LOAD POST.
+                                try {
+                                    userJson = new JSONObject(getIntent().getStringExtra("userdata"));
 
-                            resultData.get("secure_url");
-                             */
+                                    Post post = new Post(userJson.getString("firstName")+userJson.getString("lastName"),
+                                            mDateFormat.format(new Date()),
+                                            binding.createPostCategory.getText().toString(),
+                                            resultData.get("secure_url").toString(),
+                                            binding.createPostDescription.getText().toString());
 
-                        }
+                                    post.setCreatorId(userJson.getString("_id"));
 
-                        @Override
-                        public void onError(String requestId, ErrorInfo error) {
+                                    //send post to server.
 
-                        }
+                                    createPostToPush(post);
 
-                        @Override
-                        public void onReschedule(String requestId, ErrorInfo error) {
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
-                        }
-                    }).dispatch();
-                    //Log.i("--CLOUD MAP----",result.toString());
+                            }
+                            @Override
+                            public void onError(String requestId, ErrorInfo error) {
 
+                            }
+                            @Override
+                            public void onReschedule(String requestId, ErrorInfo error) {
+
+                            }
+                        }).dispatch();
             }
         });
         thread.start();
-
-
-//        CloudinaryService cloudinaryService = new CloudinaryService(config, CreatePostActivity.this);
-//        Map resultData = cloudinaryService.UploadTask(file);
-
     }
+
+    private void createPostToPush(Post post){
+        JSONObject postForm = new JSONObject();
+        try{
+            postForm.put("creatorId", post.getCreatorId());
+            postForm.put("creatorName", post.getCreatorName());
+            postForm.put("category", post.getCategory());
+            postForm.put("mediaUrl", post.getMediaUrl());
+            postForm.put("description", post.getDescription());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody requestBody = RequestBody.create(postForm.toString(), MediaType.parse("application/json; charset=utf-8"));
+
+        postRequest(postUrl, requestBody, post);
+    }
+
+    private void postRequest(String postUrl, RequestBody requestBody, Post post){
+        OkHttpClient client = new OkHttpClient();
+
+        final Request request = new Request.Builder().url(postUrl).post(requestBody).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                try{
+                    runOnUiThread(()->{
+
+                        if(!response.isSuccessful()){
+                            try (ResponseBody responseBody = response.body()){
+                                Toast.makeText(CreatePostActivity.this, responseBody.string(), Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }else{
+                            Toast.makeText(CreatePostActivity.this, "Post Successful " , Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    });
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+        });
+    }
+
 }
