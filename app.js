@@ -24,6 +24,7 @@ mongoose.connect('mongodb+srv://apoorv:apoorv2101@findlost.7s1yz.mongodb.net/fin
 //     console.error('FATAL ERROR, ENV VAR NOT DEFINED');
 //     process.exit(1);
 // }
+
 let app = express();
 
 app.use(express.json());

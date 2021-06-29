@@ -34,7 +34,9 @@ router.post('/', async (req, res) => {
 
     // return res.send(token);
 
+
     return res.send({
+        "_id" : user._id,
         "firstName" : user.firstName,
         "lastName" : user.lastName,
         "email" : user.email
