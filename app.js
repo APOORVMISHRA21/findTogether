@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const registerRouter = require('./Routes/register');
 const loginRouter = require('./Routes/login');
+const postRouter = require('./Routes/posts');
 
 
 mongoose.connect('mongodb+srv://apoorv:apoorv2101@findlost.7s1yz.mongodb.net/findlost?retryWrites=true&w=majority',{useNewUrlParser: true, useUnifiedTopology: true})
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use('/me', (req, res) => {res.send('ONLINE !!!!')});
 app.use('/user', registerRouter);
 app.use('/login', loginRouter);
+app.use('/post', postRouter);
 
 const PORT = process.env.PORT || 3000;
 
