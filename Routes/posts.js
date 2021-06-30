@@ -7,12 +7,12 @@ const {Post, validatePost} = require('../Models/post.js');
 router.use(express.json());
 
 router.get('/found', async (req, res) => {
-    const post = await Post.find({status : "found"});
+    const post = await Post.find({status : "FOUND"});
     res.send(post);
 });
 
 router.get('/lost', async(req, res) => {
-    const post = await Post.find({status : "lost"});
+    const post = await Post.find({status : "LOST"});
     res.send(post);
 });
 
