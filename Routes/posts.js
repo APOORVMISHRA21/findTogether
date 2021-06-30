@@ -6,6 +6,16 @@ const {Post, validatePost} = require('../Models/post.js');
 
 router.use(express.json());
 
+router.get('/found', async (req, res) => {
+    const post = await Post.find({status : "found"});
+    res.send(post);
+});
+
+router.get('/lost', async(req, res) => {
+    const post = await Post.find({status : "lost"});
+    res.send(post);
+});
+
 router.post('/', async(req, res) => {
 
     const { error } = validatePost(req.body);
@@ -14,6 +24,7 @@ router.post('/', async(req, res) => {
 
     const post = Post({
         creatorId : req.body.creatorId,
+        status : req.body.status,
         creatorName : req.body.creatorName,
         category : req.body.category,
         creationDate : req.body.creationDate,

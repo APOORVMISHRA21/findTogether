@@ -3,6 +3,7 @@ const Joi = require('joi');
 
 const schema = Joi.object({
     creatorId : Joi.string().required(),
+    status : Joi.string().required(),
     creatorName : Joi.string().required(),
     category : Joi.string().required(),
     creationDate : Joi.string().required(),
@@ -16,6 +17,11 @@ function validatePost(post){
 
 const postSchema = new mongoose.Schema({
     creatorId : {
+        type : String,
+        required : true
+    },
+
+    status : {
         type : String,
         required : true
     },
