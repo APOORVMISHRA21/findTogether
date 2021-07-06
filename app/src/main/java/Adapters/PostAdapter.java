@@ -55,7 +55,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         Post post = postList.get(position);
         holder.mProfilePic.setImageResource(R.drawable.ic_user);
-        holder.mPostMedia.setImageResource(R.drawable.ic_broken_image);
+        //holder.mPostMedia.setImageResource(R.drawable.ic_broken_image);
+        Picasso.get().load(post.getMediaUrl()).placeholder(R.drawable.ic_broken_image).into(holder.mPostMedia);
         holder.mCreatorName.setText(post.getCreatorName());
         holder.mCreationDate.setText(post.getCreationDate());
         holder.mPostCategory.setText(post.getCategory());

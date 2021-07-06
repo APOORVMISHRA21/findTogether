@@ -2,6 +2,7 @@ package Models;
 
 public class Post {
     String creatorId;
+    String status;
     String creatorName;
     String creationDate;
     String category;
@@ -43,6 +44,14 @@ public class Post {
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getCreatorName() {

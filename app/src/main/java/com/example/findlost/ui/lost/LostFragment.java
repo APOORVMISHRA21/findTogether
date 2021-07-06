@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.findlost.R;
+import com.example.findlost.ui.found.FoundViewModel;
 
 import java.util.ArrayList;
 
@@ -23,27 +24,53 @@ import Models.Post;
 
 public class LostFragment extends Fragment {
 
+    private LostViewModel lostViewModel;
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
-    private LostViewModel lostViewModel;
+    private ArrayList<Post> list;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        if(list==null)
+        {
+            list = new ArrayList<>();
+        }
         lostViewModel = new ViewModelProvider(this).get(LostViewModel.class);
         View root = inflater.inflate(R.layout.fragment_lost, container, false);
-
-        recyclerView = (RecyclerView) root.findViewById(R.id.postRecyclerView);
-
-        lostViewModel.getData().observe(getViewLifecycleOwner(), userListUpdateObserver);
         return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = view.findViewById(R.id.postRecyclerView);
+        lostViewModel.getData().observe(getViewLifecycleOwner(), userListUpdateObserver);
     }
 
     private Observer<ArrayList<Post>> userListUpdateObserver = new Observer<ArrayList<Post>>() {
         @Override
         public void onChanged(ArrayList<Post> userArrayList) {
-            postAdapter = new PostAdapter(userArrayList, requireActivity());
-            recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+            list.clear();
+            list = userArrayList;
+            postAdapter = new PostAdapter(list, requireActivity());
             recyclerView.setAdapter(postAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         }
     };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        lostViewModel.getData().observe(getViewLifecycleOwner(), userListUpdateObserver);
+        if(postAdapter!=null)
+            postAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(postAdapter!=null)
+            postAdapter.notifyDataSetChanged();
+    }
 }

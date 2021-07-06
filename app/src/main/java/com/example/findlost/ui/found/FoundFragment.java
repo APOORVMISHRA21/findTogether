@@ -2,10 +2,10 @@ package com.example.findlost.ui.found;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.findlost.CreatePostActivity;
 import com.example.findlost.R;
+import com.example.findlost.databinding.FragmentFoundBinding;
 import com.example.findlost.ui.lost.LostViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -31,25 +32,53 @@ public class FoundFragment extends Fragment {
     private FoundViewModel foundViewModel;
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
-    private FloatingActionButton fab;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        foundViewModel = new ViewModelProvider(this).get(FoundViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_lost, container, false);
 
-        recyclerView = (RecyclerView) root.findViewById(R.id.postRecyclerView);
+        foundViewModel = new ViewModelProvider(requireActivity()).get(FoundViewModel.class);
+
+        return inflater.inflate(R.layout.fragment_lost, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.i("vvvv","vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+        recyclerView = (RecyclerView) view.findViewById(R.id.postRecyclerView);
         foundViewModel.getData().observe(getViewLifecycleOwner(), userListUpdateObserver);
+        if(postAdapter!=null){
+            postAdapter.notifyDataSetChanged();
+        }
+    }
 
-        return root;
+    @Override
+    public void onStart() {
+        super.onStart();
+        foundViewModel.getData().observe(getViewLifecycleOwner(), userListUpdateObserver);
+        if(postAdapter!=null){
+            postAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        foundViewModel.getData().observe(getViewLifecycleOwner(), userListUpdateObserver);
+        if(postAdapter!=null){
+            postAdapter.notifyDataSetChanged();
+        }
     }
 
     private Observer<ArrayList<Post>> userListUpdateObserver = new Observer<ArrayList<Post>>() {
         @Override
         public void onChanged(ArrayList<Post> userArrayList) {
+            Log.i("USER ARRAY LIST", userArrayList.toString());
             postAdapter = new PostAdapter(userArrayList, requireActivity());
             recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
             recyclerView.setAdapter(postAdapter);
+
         }
     };
 }

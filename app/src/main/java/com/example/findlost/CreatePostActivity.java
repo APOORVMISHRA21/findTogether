@@ -55,8 +55,11 @@ public class CreatePostActivity extends AppCompatActivity {
     private JSONObject userJson = null;
     private Map resultData = new HashMap();
     private ConfigCloudinary Config;
+    private Post post;
     TextView send_post_btn;
     int status = 0;                         //1-lost 2-found
+    String strStatus="";
+
     static String postUrl = "http://find-lost.herokuapp.com/post";
 
 
@@ -145,7 +148,7 @@ public class CreatePostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CreatePostActivity.this, AddMediaActivity.class);
-                String strStatus="";
+
                 if(status == 1)
                     strStatus = "LOST";
                 else
@@ -160,6 +163,14 @@ public class CreatePostActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 LaunchAddMedia.launch(intent);
+            }
+        });
+
+        send_post_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createPostToPush(post);
+                finish();
             }
         });
     }
@@ -213,23 +224,20 @@ public class CreatePostActivity extends AppCompatActivity {
                                 //Log.i("REQUEST UPLOAD----", requestId);
                                 Log.i("REQUEST UPLOAD----", resultData.get("secure_url").toString());
 
-                                SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
+                                SimpleDateFormat mDateFormat = new SimpleDateFormat("EEE, MMM d", Locale.US);
 
                                 try {
                                     userJson = new JSONObject(getIntent().getStringExtra("userdata"));
 
-                                    Post post = new Post(userJson.getString("firstName")+userJson.getString("lastName"),
+                                     post = new Post(userJson.getString("firstName")+userJson.getString("lastName"),
                                             mDateFormat.format(new Date()),
                                             binding.createPostCategory.getText().toString(),
                                             resultData.get("secure_url").toString(),
                                             binding.createPostDescription.getText().toString());
 
                                     post.setCreatorId(userJson.getString("_id"));
-
-                                    //send post to server.
-
-                                    createPostToPush(post);
-
+                                    post.setStatus(strStatus);
+                                    //send post to server
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -253,8 +261,10 @@ public class CreatePostActivity extends AppCompatActivity {
         JSONObject postForm = new JSONObject();
         try{
             postForm.put("creatorId", post.getCreatorId());
+            postForm.put("status",post.getStatus());
             postForm.put("creatorName", post.getCreatorName());
             postForm.put("category", post.getCategory());
+            postForm.put("creationDate", post.getCreationDate());
             postForm.put("mediaUrl", post.getMediaUrl());
             postForm.put("description", post.getDescription());
         } catch (JSONException e) {
@@ -280,12 +290,14 @@ public class CreatePostActivity extends AppCompatActivity {
 
                         if(!response.isSuccessful()){
                             try (ResponseBody responseBody = response.body()){
-                                Toast.makeText(CreatePostActivity.this, responseBody.string(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(CreatePostActivity.this, responseBody.string(), Toast.LENGTH_SHORT).show();
+                                Log.i("---POST UNSUCCESS---", responseBody.string()+"%%%%%%%%%%%%%%%%%%%%%%%%");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }else{
                             Toast.makeText(CreatePostActivity.this, "Post Successful " , Toast.LENGTH_SHORT).show();
+                            Log.i("-------POST SUCCESS---", "~~~~~~~~~~~~@@@@@@@@@@@~~~~~~~~~~~~");
                             finish();
                         }
                     });
